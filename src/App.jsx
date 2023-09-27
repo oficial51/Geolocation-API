@@ -51,7 +51,7 @@ export default function App() {
 
   return (
     <main className=" w-screen flex-col flex items-center justify-center ">
-      <div className="bgMobile bgDesktop md:w-full bg-no-repeat bg-cover md:h-[280px] -z-10 h-[300px] w-[375px] top-0 absolute"></div>
+      <div className="bgMobile bgDesktop md:w-full bg-no-repeat bg-cover md:h-[280px] -z-10 h-[300px] w-full top-0 absolute"></div>
       <h1 className="text-[19px] md:text-[32px] text-white font-bold md:mt-[27px] mt-[31px] text-center">
         IP Address Tracker
       </h1>
