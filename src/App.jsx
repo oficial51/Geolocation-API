@@ -7,21 +7,22 @@ import MarkerPosition from "./MarkerPosition";
 export default function App() {
   const [address, setAddress] = useState(null);
   const [ipAddress, setIpAddress] = useState("");
-  const checkIpAddress = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
-  const checkDomain =
-    /^(?!-)[A-Za-z0-9-]+([\-\.]{1}[a-z0-9]+)*\.[A-Za-z]{2,6}$/;
+  const [timezone, setTimezone] = useState("")
+  //const checkIpAddress = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+  //const checkDomain =
+  //  /^(?!-)[A-Za-z0-9-]+([\-\.]{1}[a-z0-9]+)*\.[A-Za-z]{2,6}$/;
 
   useEffect(() => {
     try {
       const getInitialData = async () => {
-        const res = await fetch(
-          `https://geo.ipify.org/api/v2/country,city?apiKey=${
-            import.meta.env.VITE_REACT_APP_API_KEY
-          }&ipAddress=192.222.174.121`
-        );
+        const res = await fetch(" http://ip-api.com/json/192.222.174.121");
         const data = await res.json();
         setAddress(data);
         console.log(data);
+        let pretimezone = await data.timezone
+        let array = pretimezone.split('/')
+        console.log(array[1])
+        setTimezone(array[1])
       };
       getInitialData();
     } catch (error) {
@@ -30,19 +31,14 @@ export default function App() {
   }, []);
 
   async function getEnteredAdrress() {
-    const res = await fetch(
-      `https://geo.ipify.org/api/v2/country,city?apiKey=${
-        import.meta.env.VITE_REACT_APP_API_KEY
-      }&${
-        checkIpAddress.test(ipAddress)
-          ? `ipAddress=${ipAddress}`
-          : checkDomain.test(ipAddress)
-          ? `domain=${ipAddress}`
-          : ""
-      }`
-    );
+    const res = await fetch(`http://ip-api.com/json/${ipAddress}`);
     const data = await res.json();
     setAddress(data);
+    console.log(data)
+    let pretimezone = await data.timezone
+    let array = pretimezone.split('/')
+    console.log(array[1])
+    setTimezone(array[1])
   }
   function handleSubmit(e) {
     e.preventDefault();
@@ -85,7 +81,7 @@ export default function App() {
                 IP Address
               </p>
               <h3 className="mt-[5px]  lg:text-[27px] font-bold text-[19px]">
-                {address.ip}
+                {address.query}
               </h3>
             </div>
             <div className="md:flex md:items-center lg:pl-[33px] lg:w-[278px] lg:border-r lg:h-[80px] lg:items-start lg:justify-start md:justify-center md:flex-col">
@@ -93,7 +89,7 @@ export default function App() {
                 Location
               </p>
               <h3 className="mt-[5px]  lg:text-[27px] font-bold text-[19px]">
-                {address.location.region}
+                {address.regionName}
               </h3>
             </div>
             <div className="md:flex md:items-center lg:pl-[33px] lg:w-[278px] lg:border-r lg:h-[80px] lg:items-start lg:justify-start md:justify-center md:flex-col">
@@ -101,10 +97,10 @@ export default function App() {
                 Timezone
               </p>
               <h3 className="mt-[5px]  lg:text-[27px] font-bold text-[19px]">
-                UTC{address.location.timezone}
+                {timezone}
               </h3>
             </div>
-            <div className="md:flex md:items-center lg:pl-[33px] lg:w-[278px] lg:h-[80px] lg:items-start lg:justify-start md:justify-center md:flex-col">
+            <div className="md:flex relative md:items-center lg:pl-[33px] lg:w-[278px] lg:h-[80px] lg:items-start lg:justify-start md:justify-center md:flex-col">
               <p className="text-center text-[#949494] lg:text-[11px] text-[10px] tracking-wider font-bold uppercase ">
                 ISP
               </p>
@@ -114,20 +110,19 @@ export default function App() {
             </div>
           </div>
 
-            <MapContainer
-              className="absolute top-[300px] lg:top-[280px] -z-20"
-              center={[address.location.lat, address.location.lng]}
-              style={{ height: "700px", width: "100vw" }}
-              zoom={13}
-              scrollWheelZoom={true}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <MarkerPosition address={address}></MarkerPosition>
-            </MapContainer>
-
+          <MapContainer
+            className="absolute top-[300px] lg:top-[280px] -z-20"
+            center={[address.lat, address.lon]}
+            style={{ height: "700px", width: "100vw" }}
+            zoom={13}
+            scrollWheelZoom={true}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MarkerPosition address={address}></MarkerPosition>
+          </MapContainer>
         </>
       )}
     </main>

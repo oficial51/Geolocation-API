@@ -3,7 +3,7 @@ import icon from "./icon";
 import { useEffect } from "react";
 
 const MarkerPosition = ({address}) => {
-  const position = [address.location.lat, address.location.lng]
+  const position = [address.lat, address.lon]
   const map = useMap()
 
   useEffect(() => {
