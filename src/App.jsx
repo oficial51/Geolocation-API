@@ -80,7 +80,7 @@ export default function App() {
               } font-medium pl-[23px] w-[269px] md:w-[500px]`}
               type="text"
               required
-              placeholder="Search for any IP address or domain"
+              placeholder="Search for any IP address"
               value={ipAddress}
               onChange={(e) => setIpAddress(e.target.value)}
             />
